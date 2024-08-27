@@ -6,18 +6,20 @@
     <title>Object Detection with TensorFlow.js and COCO-SSD</title>
     <style>
         #canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
+            border: 1px solid black;
         }
-        #video {
-            display: none;
+        #image {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
-    <video id="video" width="640" height="480" autoplay></video>
-    <canvas id="canvas" width="640" height="480"></canvas>
+    <h1>Object Detection with TensorFlow.js and COCO-SSD</h1>
+    <input type="file" id="file-input" accept="image/*">
+    <br>
+    <img id="image" />
+    <canvas id="canvas"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
     <script src="script.js"></script>
