@@ -3,25 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Object Detection with TensorFlow.js and COCO-SSD</title>
-    <style>
-        #canvas {
-            border: 1px solid black;
-        }
-        #image {
-            max-width: 100%;
-            height: auto;
-        }
-    </style>
+    <title>WebAR with Marker Memory</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/AR-js-org/AR.js/3.3.2/aframe/build/aframe-ar.js"></script>
+    <script src="https://threejs.org/build/three.js"></script>
 </head>
-<body>
-    <h1>Object Detection with TensorFlow.js and COCO-SSD</h1>
-    <input type="file" id="file-input" accept="image/*">
-    <br>
-    <img id="image" />
-    <canvas id="canvas"></canvas>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
-    <script src="script.js"></script>
+<body style="margin: 0; overflow: hidden;">
+    <a-scene embedded arjs>
+        <!-- カメラ -->
+        <a-camera position="0 0 0"></a-camera>
+
+        <!-- マーカーベースのAR -->
+        <a-marker preset="custom" type="pattern" url="assets/marker.patt" id="marker">
+            <a-entity gltf-model="url(assets/model.glb)" position="0 0 0" scale="1 1 1"></a-entity>
+        </a-marker>
+
+        <!-- マーカーが消えた場合に表示するエンティティ -->
+        <a-entity id="memoryModel" gltf-model="url(assets/model.glb)" position="0 0 0" scale="1 1 1" visible="false"></a-entity>
+    </a-scene>
+
+    <script>
+        let marker = document.querySelector("#marker");
+        let memoryModel = document.querySelector("#memoryModel");
+        let memoryPosition, memoryRotation;
+        let isMemorySaved = false;
+
+        marker.addEventListener("markerFound", () => {
+            console.log("Marker found");
+            memoryPosition = marker.getAttribute('position');
+            memoryRotation = marker.getAttribute('rotation');
+            isMemorySaved = true;
+            alert("位置と特徴を記憶しました！");
+        });
+
+        marker.addEventListener("markerLost", () => {
+            console.log("Marker lost");
+            if (isMemorySaved) {
+                memoryModel.setAttribute('position', memoryPosition);
+                memoryModel.setAttribute('rotation', memoryRotation);
+                memoryModel.setAttribute('visible', true);
+                console.log("Memory-based model displayed");
+            }
+        });
+    </script>
 </body>
 </html>
